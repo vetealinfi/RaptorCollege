@@ -26,6 +26,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.codebake.raptor.raptorcollege.adapter.PagerAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,83 +56,38 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout2);
+        tabLayout.addTab(tabLayout.newTab().setText("Elije donde cazar"));
+        tabLayout.addTab(tabLayout.newTab().setText("Selecciona tu presa"));
+        tabLayout.addTab(tabLayout.newTab().setText("Atrápalo"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
 
-        setupViewPager(mViewPager);
-
-        mTabLayout.setupWithViewPager(mViewPager);
-
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        Context context = getApplicationContext();
-
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.add(getResources().getString(R.string.first), ContextCompat.getColor(context,R.color.cyan));
-        //adapter.add(getResources().getString(R.string.first), getResources().getColor(R.color.cyan));
-        adapter.add(getResources().getString(R.string.second), ContextCompat.getColor(context,R.color.teal));
-        //adapter.add(getResources().getString(R.string.second), getResources().getColor(R.color.teal));
-        adapter.add(getResources().getString(R.string.third), ContextCompat.getColor(context,R.color.amber));
-        //adapter.add(getResources().getString(R.string.third), getResources().getColor(R.color.amber));
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
     }
 
-    static class ViewPagerAdapter extends FragmentPagerAdapter {
-        private List<Fragment> mFragmentList = new ArrayList<>();
-        private List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void add(String title, int color) {
-            Fragment fragment = DummyFragment.newInstance(title, color);
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-    }
-
-    public static class DummyFragment extends Fragment {
-
-        public static final String COLOR = "color";
-        public static final String TEXT = "text";
-
-        public static Fragment newInstance(String text, int color) {
-            DummyFragment f = new DummyFragment();
-            Bundle args = new Bundle();
-            args.putInt(COLOR, color);
-            args.putString(TEXT, text);
-            f.setArguments(args);
-            return f;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment, container, false);
-            FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frameLayout);
-            TextView textView = (TextView) view.findViewById(R.id.textView);
-            frameLayout.setBackgroundColor(getArguments().getInt(COLOR));
-            textView.setText(getArguments().getString(TEXT));
-            return view;
-        }
-    }
 
     @Override
     public void onBackPressed() {
