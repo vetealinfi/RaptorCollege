@@ -15,7 +15,7 @@ public class ResultadoColegiosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultado_colegios);
 
-        //getSupportFragmentManager().beginTransaction().add(R.id.frameLayoutId,new ColegiosFragment()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.frameLayoutId,new ColegiosFragment()).commit();
 
 
 

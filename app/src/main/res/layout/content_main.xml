@@ -8,10 +8,6 @@
     tools:context="com.codebake.raptor.raptorcollege.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <Button
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="notificacion"
-        android:onClick="enviaNotification" />7
+
 
 </LinearLayout>
