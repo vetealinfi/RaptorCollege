@@ -10,9 +10,13 @@ public class Colegio {
     private Double latitude;
     private Double longitude;
     private String photoUrl;
+    private String phone;
 
-    public Colegio(String name,String address,Double latitude,Double longitude) {
+
+
+    public Colegio(String name, String address, Double latitude, Double longitude) {
         this.id=0;
+
         this.name=name;
         this.address= address;
         this.latitude=latitude;
@@ -45,6 +49,13 @@ public class Colegio {
         this.photoUrl=photoUrl;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getPhotoUrl() {
         return photoUrl;

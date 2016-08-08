@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -25,16 +26,28 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.codebake.raptor.raptorcollege.adapter.IFragmentToActivity;
 import com.codebake.raptor.raptorcollege.adapter.PagerAdapter;
+import com.codebake.raptor.raptorcollege.ui.TabFragment3;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import Modelo.ColegioTransporte;
 import util.AndroidUtils;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
+
+
+    private final String LOG_TAG = "MainActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +75,35 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addTab(tabLayout.newTab().setText("Atrápalo"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        final ColegioTransporte colegioTransporte = new ColegioTransporte();
+
+
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
 
         final PagerAdapter adapter = new PagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
+                (getSupportFragmentManager(), tabLayout.getTabCount(),viewPager,colegioTransporte);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                Log.d("test", "currentTab "+ tab.getPosition());
+                if(colegioTransporte.getHayObjetoColegioActivo()==1 && colegioTransporte.getHayCampoMapa()==1){
+                    TextView mTextView1 = colegioTransporte.getmTextView1();
+                    mTextView1.setText(colegioTransporte.getColegioActivo().getName());
+                    colegioTransporte.getMtextoMapaDireccion().setText(colegioTransporte.getColegioActivo().getAddress());
+                    colegioTransporte.getMtextoMapaTelefono().setText(colegioTransporte.getColegioActivo().getPhone());
+                    if(colegioTransporte.getHayGoogleMap()==1){
+                        colegioTransporte.getmGoogleMap().clear();
+
+                        Marker marker = colegioTransporte.getmGoogleMap().addMarker(new MarkerOptions().position(new LatLng(colegioTransporte.getColegioActivo().getLatitude(), colegioTransporte.getColegioActivo().getLongitude())).title(colegioTransporte.getColegioActivo().getName()));
+                        colegioTransporte.getmGoogleMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(colegioTransporte.getColegioActivo().getLatitude(), colegioTransporte.getColegioActivo().getLongitude()), 3));
+                        colegioTransporte.getmGoogleMap().animateCamera( CameraUpdateFactory.zoomTo(15) );
+                        marker.showInfoWindow();
+                    }
+                }
             }
 
             @Override
@@ -85,7 +116,7 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
+        //viewPager.setCurrentItem(3);
     }
 
 
@@ -156,4 +187,13 @@ public class MainActivity extends AppCompatActivity
         String mensaje = "aaaaaa";
         AndroidUtils.enviarNotificacion(this,mensaje,R.drawable.ic_menu_camera,SplashActivity.class);
     }
+
+
+
+    public void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+
+
 }

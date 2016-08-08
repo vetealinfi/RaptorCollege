@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tiposColegio">
+        <item></item>
+        <item>Municipal</item>
+        <item>Particular Subvencionado</item>
+        <item>Particular Pagado</item>
+        <item>Corp. De Administración Delegada</item>
+    </string-array>
+    <string-array name="orientacionReligiosa">
+        <item></item>
+        <item>Orientación religiosa Laica</item>
+        <item>Orientación religiosa Católica</item>
+        <item>Orientación religiosa Evangélica</item>
+        <item>Orientación Musulmana</item>
+        <item>Orientación Judía</item>
+        <item>Orientación Budista</item>
+        <item>Otro</item>
+    </string-array>
+
+
+
+</resources>

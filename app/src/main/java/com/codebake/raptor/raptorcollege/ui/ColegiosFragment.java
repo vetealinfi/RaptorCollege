@@ -5,18 +5,22 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.design.widget.TabLayout;
 
 import com.codebake.raptor.raptorcollege.R;
 import com.codebake.raptor.raptorcollege.adapter.ColegioAdapter;
+import com.codebake.raptor.raptorcollege.adapter.IFragmentToActivity;
 
 import java.util.ArrayList;
 
 import Modelo.Colegio;
+import Modelo.ColegioTransporte;
 
 /**
  * Created by CTN Developer on 28-07-2016.
@@ -26,12 +30,25 @@ public class ColegiosFragment extends Fragment{
     public final static int NUM_COLS=1;
     private RecyclerView mResultadoColegiosList;
     private ColegioAdapter colegioAdapter;
+    ViewPager viewPager;
+    ArrayList<Colegio> colegios = new ArrayList<>();
+    private IFragmentToActivity mCallback;
+    ColegioTransporte colegioTransporte;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        colegioAdapter = new ColegioAdapter(getActivity());
+        colegioAdapter = new ColegioAdapter(getActivity(),viewPager,colegioTransporte);
+    }
+
+
+    public static final ColegiosFragment newInstance(ViewPager viewPager,ColegioTransporte colegioTransporte){
+        ColegiosFragment f = new ColegiosFragment();
+        f.viewPager = viewPager;
+        f.colegioTransporte = colegioTransporte;
+        return f;
     }
 
     @Nullable
@@ -49,6 +66,8 @@ public class ColegiosFragment extends Fragment{
     }
 
 
+
+
     private void setUpColegiosList(){
 
         mResultadoColegiosList.setLayoutManager(new GridLayoutManager(getActivity(),NUM_COLS));
@@ -58,13 +77,9 @@ public class ColegiosFragment extends Fragment{
     }
 
     private void setDummyContent( ){
-        ArrayList<Colegio> colegios = new ArrayList<>();
-        //31
-        for (int i=0; i<10;i++){
-
-            colegios.add(new Colegio("Colegio "+i,"Direccion "+i,0.0,0.0));
-        }
-
-        colegioAdapter.addAll(colegios);
+        colegioAdapter.addAll(this.colegioTransporte.getColegios());
     }
+
+
+
 }
